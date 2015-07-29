@@ -3,6 +3,8 @@
 
 This twitterbot uses twitter4j, a library for the Twitter API.
 
+The twitterbot is written with scala 2.11.7 and built with sbt version 0.13.8
+
 To be able to read the firehose, you will need first to create a Twitter application at http://apps.twitter.com, get your credentials.
 Provide the given credentials in the TwitterInstance trait. See example below:
 
