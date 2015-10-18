@@ -21,12 +21,15 @@ This project contains three runable main classes. If your start sbt and give the
 
 Multiple main classes detected, select one to run:
 
- * [1] nl.ncim.rss.reader.RssFeedParser
- * [2] nl.ncim.rss.reader.TwitterBot
- * [3] nl.ncim.rss.reader.TwitterBotWithActors
+  * [1] nl.ncim.rss.reader.RssFeedParser
+  * [2] nl.ncim.rss.reader.TwitterBot
+  * [3] nl.ncim.rss.reader.TwitterBotWithActors
+  * [4] nl.ncim.twitter.example.stream.StatusStreamer
+
  
 # Description 
 
  * 1 RssFeedParser - Just gets the feeds from the given url and shortens the url
  * 2 TwitterBot- The twitterbot
  * 3 TwitterBotWithActors- The twitterbot with akka actors
+ * 4 Get a 2 seconds sample of the twitterstream
