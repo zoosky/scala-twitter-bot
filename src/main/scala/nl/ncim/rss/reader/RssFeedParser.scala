@@ -11,15 +11,13 @@ object RssFeedParser {
 
   def main(args: Array[String]): Unit = {
     try {
-      val sfi = new SyndFeedInput()
-
-      val urls = List("http://www.computerweekly.com/rss/Internet-technology.xml", "http://feeds.feedburner.com/TechCrunch/")
+      val urls = List("http://www.computerweekly.com/rss/Internet-technology.xml")
 
       urls.foreach(url => {
-        val i = new SyndFeedInput().build(new XmlReader(new URL(url))).getEntries
-        val b = List(i.toArray(new Array[SyndEntry](0)) : _*)
+        val feed = new SyndFeedInput().build(new XmlReader(new URL(url))).getEntries
+        val parsedFeeds = List(feed.toArray(new Array[SyndEntry](0)) : _*)
 
-        b.foreach(entry =>{
+        parsedFeeds.foreach(entry =>{
           println(entry.getTitle)
           println(shortenUrl(entry.getLink))
         })

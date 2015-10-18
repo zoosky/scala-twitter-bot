@@ -5,9 +5,8 @@ import java.net.{MalformedURLException, URLEncoder, URL}
 import com.rometools.rome.feed.synd.SyndEntry
 import com.rometools.rome.io.{XmlReader, SyndFeedInput}
 
-import twitter4j.{TwitterStreamFactory, TwitterFactory}
+import twitter4j.{TwitterFactory}
 import twitter4j.auth.AccessToken
-
 
 trait TwitterInstance {
   val twitter = new TwitterFactory().getInstance
@@ -20,29 +19,25 @@ object TwitterBot extends TwitterInstance {
 
   def main(args: Array[String]): Unit = {
 
-    //val twitterStream = new TwitterStreamFactory(Util.config).getInstance
-    //twitterStream.addListener(Util.simpleStatusListener)
-
     try {
-      val sfi = new SyndFeedInput()
-
       val urls = List("http://www.computerweekly.com/rss/Internet-technology.xml")
       urls.foreach(url => {
 
-        val i = new SyndFeedInput().build(new XmlReader(new URL(url))).getEntries
-        val b = List(i.toArray(new Array[SyndEntry](0)): _*)
+        val feed = new SyndFeedInput().build(new XmlReader(new URL(url))).getEntries
+        val parsedFeed = List(feed.toArray(new Array[SyndEntry](0)): _*)
 
-        b.foreach(entry => {
+        parsedFeed.foreach(entry => {
           println(entry.getTitle)
           val title = entry.getTitle
           val url = shortenUrl(entry.getLink)
+          println(url)
 
           if (title.length() > 100) {
-            val tweet = title.substring(0, 100) + " " + url
+            val tweet = title.substring(0, 100) + " #technology " + url
             twitter.updateStatus(tweet)
           }
           else {
-            val tweet = title + " #it " + url
+            val tweet = title + " #technology "+ url
             twitter.updateStatus(tweet)
           }
           Thread sleep 45000
@@ -50,14 +45,14 @@ object TwitterBot extends TwitterInstance {
 
       })
     } catch {
-      case e:RuntimeException => throw new RuntimeException(e)
+      case e: RuntimeException => throw new RuntimeException(e)
     }
 
   }
 
-  def shortenUrl(url: String) {
-    val line = io.Source.fromURL("http://url.k47.cz/api/get/?url=" + URLEncoder.encode(url, "UTF8")).getLines.next
+  def shortenUrl(url: String): String ={
+    val line = io.Source.fromURL("http://tinyurl.com/api-create.php?url=" + URLEncoder.encode(url, "UTF8")).getLines.next
     if (line startsWith "ERROR") throw new MalformedURLException
-    line
+    else line
   }
 }

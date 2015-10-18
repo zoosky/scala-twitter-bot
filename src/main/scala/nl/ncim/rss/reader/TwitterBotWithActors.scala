@@ -45,7 +45,8 @@ object TwitterBotWithActors extends TwitterInstance2 {
     val parse = system.actorOf(Props[FeedParserActor], name = "parse")
     val feed = system.actorOf(Props(new GetFeedActor(parse)), name = "feed")
 
-    feed ! GetFeedActor.GetFeed("http://www.computerweekly.com/rss/Internet-technology.xml")
+    //Fire-forget
+    //feed ! GetFeedActor.GetFeed("http://www.computerweekly.com/rss/Internet-technology.xml")
     feed ! GetFeedActor.GetFeed("http://feeds.feedburner.com/TechCrunch/")
   }
 
@@ -78,10 +79,6 @@ object TwitterBotWithActors extends TwitterInstance2 {
         println("got: " + title)
         if (title.length() > 100) {
           val tweet = title.substring(0, 100) + " " + shortUrl
-          twitter.updateStatus(tweet)
-        }
-        else {
-          val tweet = title + " #java " + shortUrl
           twitter.updateStatus(tweet)
         }
         Thread sleep 45000

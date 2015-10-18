@@ -11,7 +11,6 @@ resolvers += Resolver.sonatypeRepo("snapshots")
 libraryDependencies ++= Seq(
   // RSS fetcher (note: the website is horribly outdated)
   "com.rometools" % "rome-fetcher" % "1.5.0"
-
 )
 
 libraryDependencies += "commons-codec" % "commons-codec" % "1.4"

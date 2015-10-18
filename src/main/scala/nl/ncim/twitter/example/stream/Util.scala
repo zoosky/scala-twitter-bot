@@ -1,8 +1,9 @@
-package nl.ncim.rss.reader
+package nl.ncim.twitter.example.stream
 
-import twitter4j._
 import org.apache.log4j.Logger
-import collection.mutable.ListBuffer
+import twitter4j._
+
+import scala.collection.mutable.ListBuffer
 
 /**
  * LogHelper is a trait you can mix in to provide easy log4j logging
@@ -24,28 +25,19 @@ object Util extends LogHelper {
       .setOAuthAccessTokenSecret("")
       .build
 
-
     def directMessage() {
-
       val a = listBufferOfUsers.toList
       logger.info(a.foreach(e => println(e)))
-
-
     }
 
     def simpleStatusListener = new StatusListener() {
       def onStatus(status: Status) {
-        logger.info(status.getUser().getScreenName() + " - " + status.getText());
+        println(status.getUser().getScreenName() + " - " + status.getText());
         val item = (status.getUser().getScreenName())
-
         if (item != null) {
           listBufferOfUsers += item
-          println(listBufferOfUsers.size)
-
         }
-
       }
-
       def onDeletionNotice(statusDeletionNotice: StatusDeletionNotice) {}
       def onTrackLimitationNotice(numberOfLimitedStatuses: Int) {}
       def onException(ex: Exception) {
@@ -55,6 +47,4 @@ object Util extends LogHelper {
       }
       def onStallWarning(warning: StallWarning) {}
     }
-
-
   }
