@@ -8,12 +8,17 @@ object Local extends App {
   val localActor = system.actorOf(Props[LocalActor], name = "LocalActor")  // the local actor
   localActor ! "START"                                                     // start the action
 
+  //Step 1) Sent some messages to the server
+  //Step 2) Create a case msg to receive rss feeds from the server
+  //Step 3) Get some
+
 }
 
 class LocalActor extends Actor {
 
   // create the remote actor
-  val remote = context.actorFor("akka://HelloRemoteSystem@127.0.0.1:5150/user/RemoteActor")
+  //TODO check the ip adress of the remote server
+  val remote = context.actorSelection("akka://HelloRemoteSystem@127.0.0.1:5150/user/RemoteActor")
   var counter = 0
 
   def receive = {
