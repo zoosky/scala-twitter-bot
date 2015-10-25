@@ -1,6 +1,11 @@
 package nl.ncim.twitter.client
 
+import java.net.URL
+
 import akka.actor._
+import com.rometools.rome.feed.synd.SyndEntry
+import com.rometools.rome.io.{XmlReader, SyndFeedInput}
+import nl.ncim.shortener.UrlShortener
 import nl.ncim.twitter.client.TwitterActor.TweetLine
 
 
@@ -14,26 +19,43 @@ object Local extends App {
   val localActor = system.actorOf(Props[LocalActor], name = "LocalActor")  // the local actor
   localActor ! "START"                                                     // start the action
 
-
-  //Step 1) Sent some messages to the server
-  //Step 2) Create a case msg to receive rss feeds from the server
-  //Step 3) Get some
-
 }
 
 class LocalActor extends Actor {
 
   // create the remote actor
   //TODO check the ip adress of the remote server
-  val remote = context.actorSelection("akka.tcp://HelloRemoteSystem@127.0.0.1:2552/user/RemoteActor")
+  val remote = context.actorSelection("akka.tcp://HelloRemoteSystem@127.0.0.1:2552/user/TwitterActor")
   var counter = 0
 
   def receive = {
     case "START" =>
       remote ! "Hello from the LocalActor"
+      //TODO get feeds
+      //TODO send message to remote sever
+
+      try {
+        val urls = List("http://www.computerweekly.com/rss/Internet-technology.xml")
+
+        urls.foreach(url => {
+          val feed = new SyndFeedInput().build(new XmlReader(new URL(url))).getEntries
+          val parsedFeeds = List(feed.toArray(new Array[SyndEntry](0)) : _*)
+
+          parsedFeeds.foreach(entry =>{
+            println(entry.getTitle)
+            val url = UrlShortener.shortenUrl(entry.getLink)
+            remote ! TweetLine(entry.getTitle, url)
+          })
+
+        })
+      } catch {
+        case e:RuntimeException => throw new RuntimeException(e)
+      }
+
     case msg: String =>
       println(s"LocalActor received message: '$msg'")
       if (counter < 5) {
+        //TODO make a custom reply message
         sender ! "Hello back to you"
         counter += 1
       }
