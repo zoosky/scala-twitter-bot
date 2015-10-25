@@ -25,7 +25,7 @@ class LocalActor extends Actor {
 
   // create the remote actor
   //TODO check the ip adress of the remote server
-  val remote = context.actorSelection("akka.tcp://HelloRemoteSystem@127.0.0.1:5150/user/RemoteActor")
+  val remote = context.actorSelection("akka.tcp://HelloRemoteSystem@127.0.0.1:2552/user/RemoteActor")
   var counter = 0
 
   def receive = {
