@@ -10,8 +10,8 @@ import twitter4j.auth.AccessToken
 trait TwitterInstance {
   val twitter = new TwitterFactory().getInstance
   // Authorising with your Twitter Application credentials
-  twitter.setOAuthConsumer("4rRwPc7G49ZMhseyeaz1G717b", "lwihhBWQzkkvaIxnDaqEsn5fjDMgyrW82PCSzoXSstjyjxdwPm")
-  twitter.setOAuthAccessToken(new AccessToken("2590200469-BjoRpSgZh7NqiyihkffxLQy8GDMjLPq66LvuxjK", "R01spRCW9eNXGhlvjoCH14wzRZUhvCcTrlLq17L32YghD"))
+  twitter.setOAuthConsumer("", "")
+  twitter.setOAuthAccessToken(new AccessToken("", ""))
 }
 
 object HelloRemote extends App {
