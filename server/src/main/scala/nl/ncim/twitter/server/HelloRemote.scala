@@ -1,16 +1,11 @@
 package nl.ncim.twitter.server
 
 import akka.actor._
-
-import nl.ncim.twitter.server.TwitterActor.TweetLine
+import nl.ncim.common.TwitterActor.TweetLine
 
 import twitter4j.TwitterFactory
 import twitter4j.auth.AccessToken
 
-
-object TwitterActor {
-  case class TweetLine(title: String, shortUrl: String)
-}
 
 trait TwitterInstance {
   val twitter = new TwitterFactory().getInstance
@@ -19,7 +14,7 @@ trait TwitterInstance {
   twitter.setOAuthAccessToken(new AccessToken("2590200469-BjoRpSgZh7NqiyihkffxLQy8GDMjLPq66LvuxjK", "R01spRCW9eNXGhlvjoCH14wzRZUhvCcTrlLq17L32YghD"))
 }
 
-object HelloRemote extends App with TwitterInstance {
+object HelloRemote extends App {
   val system = ActorSystem("HelloRemoteSystem")
   val remoteActor = system.actorOf(Props[RemoteActor], name = "RemoteActor")
   val tweet = system.actorOf(Props[TwitterActor], name = "TwitterActor")
@@ -36,21 +31,21 @@ object HelloRemote extends App with TwitterInstance {
 
   }
 
-  class TwitterActor extends Actor {
+  class TwitterActor extends Actor with TwitterInstance {
     def receive: Actor.Receive = {
       case TweetLine(title, shortUrl) =>
-        println("got: " + title)
+        println("got: " + title + " with url: " + shortUrl)
         if (title.length() > 100) {
           val tweet = title.substring(0, 100) + " " + shortUrl
           twitter.updateStatus(tweet)
         }
-        sender !  "Your message was sent"
+        sender ! "Your message was sent"
         Thread sleep 45000
 
-//      case SampleFireHose(clientHost) =>
-//        println("Twitter firehose sample!")
-//
-//        sender() ! "Your message was sent"
+      //      case SampleFireHose(clientHost) =>
+      //        println("Twitter firehose sample!")
+      //
+      //        sender() ! "Your message was sent"
     }
   }
 

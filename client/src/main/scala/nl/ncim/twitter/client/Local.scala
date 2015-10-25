@@ -5,13 +5,9 @@ import java.net.URL
 import akka.actor._
 import com.rometools.rome.feed.synd.SyndEntry
 import com.rometools.rome.io.{XmlReader, SyndFeedInput}
+import nl.ncim.common.TwitterActor.TweetLine
 import nl.ncim.shortener.UrlShortener
-import nl.ncim.twitter.client.TwitterActor.TweetLine
 
-
-object TwitterActor {
-  case class TweetLine(title: String, shortUrl: String)
-}
 
 object Local extends App {
 
@@ -43,8 +39,9 @@ class LocalActor extends Actor {
 
           parsedFeeds.foreach(entry =>{
             println(entry.getTitle)
-            val url = UrlShortener.shortenUrl(entry.getLink)
-            remote ! TweetLine(entry.getTitle, url)
+            println(UrlShortener.shortenUrlWithTinyUrl(entry.getLink))
+            remote ! TweetLine(entry.getTitle, UrlShortener.shortenUrlWithTinyUrl(entry.getLink))
+            Thread sleep 45000
           })
 
         })

@@ -21,7 +21,7 @@ object RssFeedParser {
 
         parsedFeeds.foreach(entry =>{
           println(entry.getTitle)
-          println(UrlShortener.shortenUrl(entry.getLink))
+          println(UrlShortener.shortenUrlWithTinyUrl(entry.getLink))
         })
 
       })
