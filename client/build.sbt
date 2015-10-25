@@ -1,16 +1,14 @@
-name := "rss-reader"
+name := "twitter-akka-client"
 
 version := "1.0"
 
 scalaVersion := "2.11.7"
 
-scalacOptions ++= Seq("-deprecation", "-feature")
-
-resolvers += Resolver.sonatypeRepo("snapshots")
+resolvers += "Typesafe Repository" at "http://repo.typesafe.com/typesafe/releases/"
 
 libraryDependencies ++= Seq(
-  // RSS fetcher (note: the website is horribly outdated)
-  "com.rometools" % "rome-fetcher" % "1.5.0"
+  "com.typesafe.akka" %% "akka-actor" % "2.4.0",
+  "com.typesafe.akka" %% "akka-remote" % "2.4.0"
 )
 
 libraryDependencies += "commons-codec" % "commons-codec" % "1.4"
@@ -18,8 +16,6 @@ libraryDependencies += "commons-codec" % "commons-codec" % "1.4"
 libraryDependencies += "oauth.signpost" % "signpost-core" % "1.2.1.1"
 
 libraryDependencies += "jtwitter" % "jtwitter" % "3.1.0" from "http://www.winterwell.com/software/jtwitter/jtwitter.jar"
-
-libraryDependencies += "com.typesafe.akka" % "akka-actor_2.11" % "2.3.12"
 
 libraryDependencies += "org.twitter4j" % "twitter4j-stream" % "4.0.4"
 
