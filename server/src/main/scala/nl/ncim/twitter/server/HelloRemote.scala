@@ -18,6 +18,7 @@ object HelloRemote extends App {
   val system = ActorSystem("HelloRemoteSystem")
   val remoteActor = system.actorOf(Props[RemoteActor], name = "RemoteActor")
   val tweet = system.actorOf(Props[TwitterActor], name = "TwitterActor")
+  var counter = 0
 
   remoteActor ! "The RemoteActor is alive"
 
@@ -26,26 +27,25 @@ object HelloRemote extends App {
     def receive = {
       case msg: String =>
         println(s"RemoteActor received message '$msg'")
-        sender ! "Hello from the RemoteActor"
+        sender() ! "Hello from the RemoteActor"
     }
 
   }
 
   class TwitterActor extends Actor with TwitterInstance {
-    def receive: Actor.Receive = {
+    def receive = {
       case TweetLine(title, shortUrl) =>
         println("got: " + title + " with url: " + shortUrl)
-        if (title.length() > 100) {
-          val tweet = title.substring(0, 100) + " " + shortUrl
-          twitter.updateStatus(tweet)
+        val length = title.length() + shortUrl.length()
+        if (length < 140) {
+          twitter.updateStatus(title + " #it " + shortUrl)
+          counter += 1
         }
-        sender ! "Your message was sent"
-        Thread sleep 45000
+        sender() ! "Your message was published"
+        Thread sleep 10000
 
-      //      case SampleFireHose(clientHost) =>
-      //        println("Twitter firehose sample!")
-      //
-      //        sender() ! "Your message was sent"
+      case "COUNT" =>
+        sender() ! "tweet counter is currently: " + counter
     }
   }
 

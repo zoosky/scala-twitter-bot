@@ -31,7 +31,7 @@ class LocalActor extends Actor {
       //TODO send message to remote sever
 
       try {
-        val urls = List("http://www.computerweekly.com/rss/Internet-technology.xml")
+        val urls = List("http://www.nasa.gov/rss/dyn/breaking_news.rss")
 
         urls.foreach(url => {
           val feed = new SyndFeedInput().build(new XmlReader(new URL(url))).getEntries
@@ -41,7 +41,9 @@ class LocalActor extends Actor {
             println(entry.getTitle)
             println(UrlShortener.shortenUrlWithTinyUrl(entry.getLink))
             remote ! TweetLine(entry.getTitle, UrlShortener.shortenUrlWithTinyUrl(entry.getLink))
-            Thread sleep 45000
+            remote ! "COUNT"
+            Thread sleep 10000
+            remote ! "COUNT"
           })
 
         })
