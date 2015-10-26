@@ -6,7 +6,6 @@ import nl.ncim.common.TwitterActor.TweetLine
 import twitter4j.TwitterFactory
 import twitter4j.auth.AccessToken
 
-
 trait TwitterInstance {
   val twitter = new TwitterFactory().getInstance
   // Authorising with your Twitter Application credentials
@@ -16,21 +15,10 @@ trait TwitterInstance {
 
 object HelloRemote extends App {
   val system = ActorSystem("HelloRemoteSystem")
-  val remoteActor = system.actorOf(Props[RemoteActor], name = "RemoteActor")
   val tweet = system.actorOf(Props[TwitterActor], name = "TwitterActor")
   var counter = 0
 
-  remoteActor ! "The RemoteActor is alive"
-
-
-  class RemoteActor extends Actor {
-    def receive = {
-      case msg: String =>
-        println(s"RemoteActor received message '$msg'")
-        sender() ! "Hello from the RemoteActor"
-    }
-
-  }
+  tweet ! "The RemoteActor is alive"
 
   class TwitterActor extends Actor with TwitterInstance {
     def receive = {
@@ -43,6 +31,10 @@ object HelloRemote extends App {
         }
         sender() ! "Your message was published"
         Thread sleep 10000
+
+      case msg: String =>
+        println(s"TwitterActor received message '$msg'")
+        sender() ! "Hello from the TwitterActor"
 
       case "COUNT" =>
         sender() ! "tweet counter is currently: " + counter

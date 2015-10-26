@@ -30,27 +30,6 @@ class LocalActor extends Actor {
       //TODO get feeds
       //TODO send message to remote sever
 
-      try {
-        val urls = List("http://www.nasa.gov/rss/dyn/breaking_news.rss")
-
-        urls.foreach(url => {
-          val feed = new SyndFeedInput().build(new XmlReader(new URL(url))).getEntries
-          val parsedFeeds = List(feed.toArray(new Array[SyndEntry](0)) : _*)
-
-          parsedFeeds.foreach(entry =>{
-            println(entry.getTitle)
-            println(UrlShortener.shortenUrlWithTinyUrl(entry.getLink))
-            remote ! TweetLine(entry.getTitle, UrlShortener.shortenUrlWithTinyUrl(entry.getLink))
-            remote ! "COUNT"
-            Thread sleep 10000
-            remote ! "COUNT"
-          })
-
-        })
-      } catch {
-        case e:RuntimeException => throw new RuntimeException(e)
-      }
-
     case msg: String =>
       println(s"LocalActor received message: '$msg'")
       if (counter < 5) {
